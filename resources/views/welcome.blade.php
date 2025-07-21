@@ -1,18 +1,12 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hotel Booking System</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
-</head>
-<body class="antialiased bg-gray-100">
+<div>
+
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <div class="relative bg-gray-100 min-h-screen">
         <!-- Hero Section -->
-        <div class="relative bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="relative bg-cover bg-center py-16" style="background-image: url('{{ asset('storage/images/hotel-bg.jpg') }}')">
+            <div class="absolute inset-0 bg-black opacity-40"></div> <!-- Overlay for text readability -->
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <!-- Hotel Branding SVG -->
                 <div class="flex justify-center mb-6">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-white" viewBox="0 0 24 24" fill="currentColor">
@@ -20,7 +14,8 @@
                         <text x="50%" y="95%" text-anchor="middle" font-size="5" fill="currentColor" font-family="Arial, sans-serif">HOTEL</text>
                     </svg>
                 </div>
-                <h1 class="text-5xl font-extrabold mb-4 tracking-tight">Welcome to LuxeStay Hotel</h1>
+                <h1 class="text-5xl font-extrabold mb-4 tracking-tight text-white">Hotel Booking System</h1>
+                <h1 class="text-5xl font-extrabold mb-4 tracking-tight text-white">Welcome to LuxeStay Hotel</h1>
                 <p class="text-lg mb-8 text-gray-100">Experience comfort and luxury with seamless booking at your fingertips.</p>
 
                 <!-- Call-to-Action Buttons -->
@@ -62,16 +57,10 @@
         <!-- Footer -->
         <footer class="bg-gray-800 text-white py-6">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <p>&copy; {{ date('Y') }} LuxeStay Hotel. All rights reserved.</p>
+                <p>© {{ date('Y') }} LuxeStay Hotel. All rights reserved.</p>
             </div>
         </footer>
     </div>
 
 
-    @livewireScripts
-</body>
-</html>
-
-
-
-
+</div>

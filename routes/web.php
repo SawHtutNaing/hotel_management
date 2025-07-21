@@ -12,9 +12,13 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    // Route::get('/booking-history', \App\Livewire\BookingHistory::class)->name('booking.history');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/breakfast-order', \App\Livewire\BreakfastOrder::class)->name('breakfast.order');
+    Route::get('/order-history', \App\Livewire\OrderHistory::class)->name('order_history');
+
 
 Route::get('/booking-history', \App\Livewire\BookingHistory::class)->name('booking.history');
    Route::get('/rooms', \App\Livewire\RoomSearch::class)->name('rooms.search');
@@ -23,6 +27,8 @@ Route::get('/booking-history', \App\Livewire\BookingHistory::class)->name('booki
     Route::get('/room-types', \App\Livewire\Admin\RoomTypeManager::class)->name('admin.room-types');
     Route::get('/rooms', \App\Livewire\Admin\RoomManager::class)->name('admin.rooms');
     Route::get('/bookings', \App\Livewire\Admin\BookingManager::class)->name('admin.bookings');
+        Route::get('/meals', \App\Livewire\Admin\MealManager::class)->name('admin.meals');
+
 });
 
 

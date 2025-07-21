@@ -15,16 +15,33 @@
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-nav-link>
+
                     <x-nav-link :href="route('rooms.search')" :active="request()->routeIs('rooms.search')">
                         {{ __('Search Rooms') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('order_history')" :active="request()->routeIs('order_history')">
+                        {{ __('Order History') }}
+                    </x-nav-link>
+
+                    @if (Auth::check() && (!Auth::user()->is_admin))
+
                     <x-nav-link :href="route('booking.history')" :active="request()->routeIs('booking.history')">
     {{ __('Booking History') }}
 </x-nav-link>
+                        <x-nav-link :href="route('breakfast.order')" :active="request()->routeIs('breakfast.order')">
+    {{ __('Breakfast Order') }}
+
+</x-nav-link>
+@endif
+
 
                     @if (Auth::check() && Auth::user()->is_admin)
 
 
+                       <x-nav-link :href="route('admin.meals')" :active="request()->routeIs('admin.meals')">
+                            {{ __('Meals') }}
+                            {{-- {{ __('Admin Dashboard') }} --}}
+                        </x-nav-link>
           <x-nav-link :href="route('admin.bookings')" :active="request()->routeIs('admin.bookings')">
                             {{ __('Room Bookings') }}
                             {{-- {{ __('Admin Dashboard') }} --}}
