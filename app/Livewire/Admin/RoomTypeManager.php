@@ -3,72 +3,131 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\RoomType;
+use Illuminate\Support\Facades\Log;
 
 class RoomTypeManager extends Component
 {
-    public $name, $description, $base_price;
-    public $roomTypeId;
-    public $isEditing = false;
+    public $room_types;
+    public $name;
+    public $description;
+    public $base_price;
+    public $editingRoomTypeId = null;
+    public $showCreateModal = false;
+    public $showEditModal = false;
 
     protected $rules = [
-        'name' => 'required|string|max:255',
+        'name' => 'string|max:255',
         'description' => 'nullable|string',
         'base_price' => 'required|numeric|min:0',
     ];
 
-    public function create()
+    public function mount()
     {
-        $this->validate();
-        RoomType::create([
-            'name' => $this->name,
-            'description' => $this->description,
-            'base_price' => $this->base_price,
-        ]);
-        $this->resetForm();
-        session()->flash('message', 'Room Type created successfully!');
+        $this->loadRoomTypes();
     }
 
-    public function edit($id)
+    public function loadRoomTypes()
+    {
+        $this->room_types = RoomType::all();
+    }
+
+    public function openCreateModal()
+    {
+        $this->resetInputFields();
+        $this->showCreateModal = true;
+    }
+
+    public function closeModal()
+    {
+        $this->showCreateModal = false;
+        $this->showEditModal = false;
+        $this->resetInputFields();
+        $this->resetValidation();
+    }
+
+    public function createRoomType()
+    {
+        $this->validate();
+
+        try {
+            RoomType::create([
+                'name' => $this->name,
+                'description' => $this->description,
+                'base_price' => $this->base_price,
+            ]);
+
+            $this->loadRoomTypes();
+            $this->closeModal();
+            $this->dispatch('notify', ['message' => 'Room Type created successfully', 'type' => 'success']);
+        } catch (\Exception $e) {
+            Log::error('Error creating room type: ' . $e->getMessage());
+            $this->dispatch('notify', ['message' => 'Error creating room type', 'type' => 'error']);
+        }
+    }
+
+    public function editRoomType($id)
     {
         $roomType = RoomType::findOrFail($id);
-        $this->roomTypeId = $id;
+        $this->editingRoomTypeId = $id;
         $this->name = $roomType->name;
         $this->description = $roomType->description;
         $this->base_price = $roomType->base_price;
-        $this->isEditing = true;
+        $this->showEditModal = true;
+
+        // Update unique rule for editing
+        $this->rules['name'] = 'required|string|max:255|unique:room_types,name,' . $id;
     }
 
-    public function update()
+    public function updateRoomType()
     {
         $this->validate();
-        $roomType = RoomType::findOrFail($this->roomTypeId);
-        $roomType->update([
-            'name' => $this->name,
-            'description' => $this->description,
-            'base_price' => $this->base_price,
-        ]);
-        $this->resetForm();
-        session()->flash('message', 'Room Type updated successfully!');
+
+        try {
+            $roomType = RoomType::findOrFail($this->editingRoomTypeId);
+            $roomType->update([
+                'name' => $this->name,
+                'description' => $this->description,
+                'base_price' => $this->base_price,
+            ]);
+
+            $this->loadRoomTypes();
+            $this->closeModal();
+            $this->dispatch('notify', ['message' => 'Room Type updated successfully', 'type' => 'success']);
+        } catch (\Exception $e) {
+            Log::error('Error updating room type: ' . $e->getMessage());
+            $this->dispatch('notify', ['message' => 'Error updating room type', 'type' => 'error']);
+        }
     }
 
-    public function delete($id)
+    public function deleteRoomType($id)
     {
-        RoomType::findOrFail($id)->delete();
-        session()->flash('message', 'Room Type deleted successfully!');
+        try {
+            $roomType = RoomType::findOrFail($id);
+            if ($roomType->rooms()->count() > 0) {
+                $this->dispatch('notify', ['message' => 'Cannot delete room type with associated rooms', 'type' => 'error']);
+                return;
+            }
+            $roomType->delete();
+
+            $this->loadRoomTypes();
+            $this->dispatch('notify', ['message' => 'Room Type deleted successfully', 'type' => 'success']);
+        } catch (\Exception $e) {
+            Log::error('Error deleting room type: ' . $e->getMessage());
+            $this->dispatch('notify', ['message' => 'Error deleting room type', 'type' => 'error']);
+        }
     }
 
-    public function resetForm()
+    private function resetInputFields()
     {
         $this->name = '';
         $this->description = '';
         $this->base_price = '';
-        $this->isEditing = false;
-        $this->roomTypeId = null;
+        $this->editingRoomTypeId = null;
+        $this->rules['name'] = 'required|string|max:255|unique:room_types,name';
     }
 
     public function render()
     {
-        $roomTypes = RoomType::all();
-        return view('livewire.admin.room-type-manager', compact('roomTypes'));
+        return view('livewire.admin.room-type-manager');
     }
 }

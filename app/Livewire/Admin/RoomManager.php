@@ -6,101 +6,164 @@ use Livewire\WithFileUploads;
 use App\Models\Room;
 use App\Models\RoomType;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class RoomManager extends Component
 {
     use WithFileUploads;
 
-    public $room_type_id, $room_number, $price, $image;
-    public $roomId;
-    public $isEditing = false;
+    public $rooms;
+    public $room_types;
+    public $room_type_id;
+    public $room_number;
+    public $is_available = true;
+    public $price;
+    public $image;
+    public $editingRoomId = null;
+    public $showCreateModal = false;
+    public $showEditModal = false;
 
     protected $rules = [
         'room_type_id' => 'required|exists:room_types,id',
-        'room_number' => 'required|string|max:255',
+        'room_number' => 'string|max:255',
+        'is_available' => 'boolean',
         'price' => 'required|numeric|min:0',
         'image' => 'nullable|image|max:2048', // Max 2MB
     ];
 
-    public function create()
+    public function mount()
+    {
+        $this->loadRooms();
+        $this->room_types = RoomType::all();
+    }
+
+    public function loadRooms()
+    {
+        $this->rooms = Room::with('roomType')->get();
+    }
+
+    public function openCreateModal()
+    {
+        $this->resetInputFields();
+        $this->showCreateModal = true;
+    }
+
+    public function closeModal()
+    {
+        $this->showCreateModal = false;
+        $this->showEditModal = false;
+        $this->resetInputFields();
+        $this->resetValidation();
+    }
+
+    public function createRoom()
     {
         $this->validate();
 
-        $imagePath = $this->image ? $this->image->store('rooms', 'public') : null;
+        try {
+            $roomData = [
+                'room_type_id' => $this->room_type_id,
+                'room_number' => $this->room_number,
+                'is_available' => $this->is_available,
+                'price' => $this->price,
+            ];
 
-        Room::create([
-            'room_type_id' => $this->room_type_id,
-            'room_number' => $this->room_number,
-            'price' => $this->price,
-            'is_available' => true,
-            'image' => $imagePath,
-        ]);
+            if ($this->image) {
+                $roomData['image'] = $this->image->store('rooms', 'public');
+            }
 
-        $this->resetForm();
-        session()->flash('message', 'Room created successfully!');
+            Room::create($roomData);
+
+            $this->loadRooms();
+            $this->closeModal();
+            $this->dispatch('notify', ['message' => 'Room created successfully', 'type' => 'success']);
+        } catch (\Exception $e) {
+            Log::error('Error creating room: ' . $e->getMessage());
+            $this->dispatch('notify', ['message' => 'Error creating room', 'type' => 'error']);
+        }
     }
 
-    public function edit($id)
+    public function editRoom($id)
     {
         $room = Room::findOrFail($id);
-        $this->roomId = $id;
+        $this->editingRoomId = $id;
         $this->room_type_id = $room->room_type_id;
         $this->room_number = $room->room_number;
+        $this->is_available = $room->is_available;
         $this->price = $room->price;
-        $this->image = null; // Reset image input
-        $this->isEditing = true;
+        $this->image = null;
+        $this->showEditModal = true;
+
+        // Update unique rule for editing
+        $this->rules['room_number'] = 'required|string|max:255|unique:rooms,room_number,' . $id;
     }
 
-    public function update()
+    public function updateRoom()
     {
         $this->validate();
 
-        $room = Room::findOrFail($this->roomId);
-        $imagePath = $room->image;
+        try {
+            $room = Room::findOrFail($this->editingRoomId);
+            $roomData = [
+                'room_type_id' => $this->room_type_id,
+                'room_number' => $this->room_number,
+                'is_available' => $this->is_available,
+                'price' => $this->price,
+            ];
 
-        if ($this->image) {
-            // Delete old image if exists
+            if ($this->image) {
+                // Delete old image if exists
+                if ($room->image) {
+                    Storage::disk('public')->delete($room->image);
+                }
+                $roomData['image'] = $this->image->store('rooms', 'public');
+            }
+
+            $room->update($roomData);
+
+            $this->loadRooms();
+            $this->closeModal();
+            $this->dispatch('notify', ['message' => 'Room updated successfully', 'type' => 'success']);
+        } catch (\Exception $e) {
+            Log::error('Error updating room: ' . $e->getMessage());
+            $this->dispatch('notify', ['message' => 'Error updating room', 'type' => 'error']);
+        }
+    }
+
+    public function deleteRoom($id)
+    {
+        try {
+            $room = Room::findOrFail($id);
+            if ($room->bookings()->count() > 0) {
+                $this->dispatch('notify', ['message' => 'Cannot delete room with active bookings', 'type' => 'error']);
+                return;
+            }
             if ($room->image) {
                 Storage::disk('public')->delete($room->image);
             }
-            $imagePath = $this->image->store('rooms', 'public');
+            $room->delete();
+
+            $this->loadRooms();
+            $this->dispatch('notify', ['message' => 'Room deleted successfully', 'type' => 'success']);
+        } catch (\Exception $e) {
+            Log::error('Error deleting room: ' . $e->getMessage());
+            $this->dispatch('notify', ['message' => 'Error deleting room', 'type' => 'error']);
         }
-
-        $room->update([
-            'room_type_id' => $this->room_type_id,
-            'room_number' => $this->room_number,
-            'price' => $this->price,
-            'image' => $imagePath,
-        ]);
-
-        $this->resetForm();
-        session()->flash('message', 'Room updated successfully!');
     }
 
-    public function delete($id)
-    {
-        $room = Room::findOrFail($id);
-        if ($room->image) {
-            Storage::disk('public')->delete($room->image);
-        }
-        $room->delete();
-        session()->flash('message', 'Room deleted successfully!');
-    }
-
-    public function resetForm()
+    private function resetInputFields()
     {
         $this->room_type_id = '';
         $this->room_number = '';
+        $this->is_available = true;
         $this->price = '';
         $this->image = null;
-        $this->isEditing = false;
-        $this->roomId = null;
+        $this->editingRoomId = null;
+        $this->rules['room_number'] = 'required|string|max:255|unique:rooms,room_number';
     }
 
     public function render()
     {
-        $rooms = Room::with('roomType')->get();
-        $roomTypes = RoomType::all();
-        return view('livewire.admin.room-manager', compact('rooms', 'roomTypes'));
+        return view('livewire.admin.room-manager');
     }
 }

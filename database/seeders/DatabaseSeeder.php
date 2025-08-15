@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Meal;
 use App\Models\Booking;
 use App\Models\Order;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,14 +18,14 @@ class DatabaseSeeder extends Seeder
         $admin = User::create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
-            'password' => bcrypt('password'),
+            'password' => Hash::make('password'),
             'is_admin' => true,
         ]);
 
         $user = User::create([
             'name' => 'Test User',
             'email' => 'user@example.com',
-            'password' => bcrypt('password'),
+            'password' => Hash::make('password'),
             'is_admin' => false,
         ]);
 
