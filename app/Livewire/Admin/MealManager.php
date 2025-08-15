@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Meal;
+use App\Models\FoodCategory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
@@ -15,24 +16,28 @@ class MealManager extends Component
     public $name;
     public $price;
     public $image;
+    public $food_category_id;
     public $editingMealId = null;
     public $showCreateModal = false;
     public $showEditModal = false;
+    public $foodCategories;
 
     protected $rules = [
         'name' => 'required|string|max:255',
         'price' => 'required|numeric|min:0',
         'image' => 'nullable|image|max:2048', // Max 2MB
+        'food_category_id' => 'required|exists:food_categories,id',
     ];
 
     public function mount()
     {
         $this->loadMeals();
+        $this->foodCategories = FoodCategory::all();
     }
 
     public function loadMeals()
     {
-        $this->meals = Meal::all();
+        $this->meals = Meal::with('foodCategory')->get();
     }
 
     public function openCreateModal()
@@ -57,6 +62,7 @@ class MealManager extends Component
             $mealData = [
                 'name' => $this->name,
                 'price' => $this->price,
+                'food_category_id' => $this->food_category_id,
             ];
 
             if ($this->image) {
@@ -80,6 +86,7 @@ class MealManager extends Component
         $this->editingMealId = $id;
         $this->name = $meal->name;
         $this->price = $meal->price;
+        $this->food_category_id = $meal->food_category_id;
         $this->image = null;
         $this->showEditModal = true;
     }
@@ -93,6 +100,7 @@ class MealManager extends Component
             $mealData = [
                 'name' => $this->name,
                 'price' => $this->price,
+                'food_category_id' => $this->food_category_id,
             ];
 
             if ($this->image) {
@@ -136,6 +144,7 @@ class MealManager extends Component
         $this->name = '';
         $this->price = '';
         $this->image = null;
+        $this->food_category_id = null;
         $this->editingMealId = null;
     }
 

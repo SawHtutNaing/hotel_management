@@ -14,6 +14,7 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Base Price</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
@@ -23,6 +24,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $roomType->name }}</td>
                         <td class="px-6 py-4">{{ $roomType->description ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${{ number_format($roomType->base_price, 2) }}</td>
+                        <td class="px-6 py-4">{{ $roomType->service ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <button wire:click="editRoomType({{ $roomType->id }})" class="text-blue-600 hover:text-blue-900 mr-4">Edit</button>
                             <button wire:click="deleteRoomType({{ $roomType->id }})" class="text-red-600 hover:text-red-900"
@@ -53,6 +55,11 @@
                     <label class="block text-sm font-medium text-gray-700">Base Price</label>
                     <input type="number" wire:model="base_price" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                     @error('base_price') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Service</label>
+                    <textarea wire:model="service" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+                    @error('service') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div class="flex justify-end">
                     <button type="button" wire:click="closeModal" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
@@ -85,6 +92,11 @@
                     <label class="block text-sm font-medium text-gray-700">Base Price</label>
                     <input type="number" wire:model="base_price" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                     @error('base_price') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Service</label>
+                    <textarea wire:model="service" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+                    @error('service') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div class="flex justify-end">
                     <button type="button" wire:click="closeModal" class="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">

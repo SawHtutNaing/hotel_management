@@ -9,10 +9,11 @@ use App\Models\Booking;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class BreakfastOrder extends Component
+class FoodOrder extends Component
 {
     public $room_id, $meal_id, $quantity = 1;
     public $total_amount = 0;
+public $food_category_id; // new property for selected category
 
     protected $rules = [
         'room_id' => 'required|exists:rooms,id',
@@ -51,20 +52,27 @@ class BreakfastOrder extends Component
         ]);
 
         $this->reset(['room_id', 'meal_id', 'quantity', 'total_amount']);
-        session()->flash('message', 'Breakfast ordered successfully!');
+        session()->flash('message', 'Food ordered successfully!');
     }
 
-    public function render()
-    {
-        $meals = Meal::all();
-        $currentBookings = Booking::where('user_id', Auth::id())
-            ->where('status', 'confirmed')
-            ->where('check_in', '<=', Carbon::today())
-            ->where('check_out', '>=', Carbon::today())
-            ->with('room')
-            ->get();
+  public function render()
+{
+    $categories = \App\Models\FoodCategory::all();
 
-            // dd($currentBookings);
-        return view('livewire.breakfast-order', compact('meals', 'currentBookings'));
+    $mealsQuery = Meal::query();
+    if ($this->food_category_id) {
+        $mealsQuery->where('food_category_id', $this->food_category_id);
     }
+    $meals = $mealsQuery->get();
+
+    $currentBookings = Booking::where('user_id', Auth::id())
+        ->where('status', 'confirmed')
+        ->where('check_in', '<=', Carbon::today())
+        ->where('check_out', '>=', Carbon::today())
+        ->with('room')
+        ->get();
+
+    return view('livewire.food-order', compact('meals', 'currentBookings', 'categories'));
+}
+
 }

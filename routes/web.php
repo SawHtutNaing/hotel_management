@@ -16,7 +16,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/breakfast-order', \App\Livewire\BreakfastOrder::class)->name('breakfast.order');
+    Route::get('/food-order', \App\Livewire\FoodOrder::class)->name('food.order');
     Route::get('/order-history', \App\Livewire\OrderHistory::class)->name('order_history');
 
 
@@ -27,7 +27,9 @@ Route::get('/booking-history', \App\Livewire\BookingHistory::class)->name('booki
     Route::get('/room-types', \App\Livewire\Admin\RoomTypeManager::class)->name('admin.room-types');
     Route::get('/rooms', \App\Livewire\Admin\RoomManager::class)->name('admin.rooms');
     Route::get('/bookings', \App\Livewire\Admin\BookingManager::class)->name('admin.bookings');
-        Route::get('/meals', \App\Livewire\Admin\MealManager::class)->name('admin.meals');
+    Route::get('/meals', \App\Livewire\Admin\MealManager::class)->name('admin.meals');
+    Route::get('/food-categories', \App\Livewire\Admin\FoodCategoryManager::class)->name('admin.food-categories');
+    Route::get('/floor-types', \App\Livewire\Admin\FloorTypeManager::class)->name('admin.floor-types');
 
 });
 

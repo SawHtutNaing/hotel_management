@@ -14,6 +14,7 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room Number</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Floor Type</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Availability</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -31,6 +32,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $room->room_number }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $room->roomType ? $room->roomType->name : 'N/A' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $room->floorType ? $room->floorType->name : 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${{ number_format($room->price, 2) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="{{ $room->is_available ? 'text-green-600' : 'text-red-600' }}">
@@ -62,6 +64,16 @@
                         @endforeach
                     </select>
                     @error('room_type_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Floor Type</label>
+                    <select wire:model="floor_type_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <option value="">Select Floor Type</option>
+                        @foreach($floor_types as $type)
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('floor_type_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700">Room Number</label>
@@ -109,6 +121,16 @@
                         @endforeach
                     </select>
                     @error('room_type_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Floor Type</label>
+                    <select wire:model="floor_type_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <option value="">Select Floor Type</option>
+                        @foreach($floor_types as $type)
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('floor_type_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700">Room Number</label>

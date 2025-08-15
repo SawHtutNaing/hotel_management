@@ -1,11 +1,25 @@
 
     <div class="max-w-7xl mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6 text-gray-900">Order Breakfast</h1>
+        <h1 class="text-3xl font-bold mb-6 text-gray-900">Order Food</h1>
 
         @if ($currentBookings->isEmpty())
-            <p class="text-gray-700">You have no active bookings. Please book a room to order breakfast.</p>
+            <p class="text-gray-700">You have no active bookings. Please book a room to order food.</p>
         @else
             <form wire:submit.prevent="order" class="space-y-4 mb-6">
+
+
+
+                <div>
+    <label class="block text-sm font-medium text-gray-700">Category</label>
+    <select wire:model.live="food_category_id" class="mt-1 block w-full rounded-md border-gray-300">
+        <option value="">All Categories</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->name }}</option>
+        @endforeach
+    </select>
+</div>
+
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Room</label>
                     <select wire:model="room_id" class="mt-1 block w-full rounded-md border-gray-300">

@@ -5,6 +5,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Room;
 use App\Models\RoomType;
+use App\Models\FloorType;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
@@ -14,7 +15,9 @@ class RoomManager extends Component
 
     public $rooms;
     public $room_types;
+    public $floor_types;
     public $room_type_id;
+    public $floor_type_id;
     public $room_number;
     public $is_available = true;
     public $price;
@@ -25,6 +28,7 @@ class RoomManager extends Component
 
     protected $rules = [
         'room_type_id' => 'required|exists:room_types,id',
+        'floor_type_id' => 'required|exists:floor_types,id',
         'room_number' => 'string|max:255',
         'is_available' => 'boolean',
         'price' => 'required|numeric|min:0',
@@ -35,11 +39,12 @@ class RoomManager extends Component
     {
         $this->loadRooms();
         $this->room_types = RoomType::all();
+        $this->floor_types = FloorType::all();
     }
 
     public function loadRooms()
     {
-        $this->rooms = Room::with('roomType')->get();
+        $this->rooms = Room::with('roomType', 'floorType')->get();
     }
 
     public function openCreateModal()
@@ -63,6 +68,7 @@ class RoomManager extends Component
         try {
             $roomData = [
                 'room_type_id' => $this->room_type_id,
+                'floor_type_id' => $this->floor_type_id,
                 'room_number' => $this->room_number,
                 'is_available' => $this->is_available,
                 'price' => $this->price,
@@ -88,6 +94,7 @@ class RoomManager extends Component
         $room = Room::findOrFail($id);
         $this->editingRoomId = $id;
         $this->room_type_id = $room->room_type_id;
+        $this->floor_type_id = $room->floor_type_id;
         $this->room_number = $room->room_number;
         $this->is_available = $room->is_available;
         $this->price = $room->price;
@@ -106,6 +113,7 @@ class RoomManager extends Component
             $room = Room::findOrFail($this->editingRoomId);
             $roomData = [
                 'room_type_id' => $this->room_type_id,
+                'floor_type_id' => $this->floor_type_id,
                 'room_number' => $this->room_number,
                 'is_available' => $this->is_available,
                 'price' => $this->price,
@@ -154,6 +162,7 @@ class RoomManager extends Component
     private function resetInputFields()
     {
         $this->room_type_id = '';
+        $this->floor_type_id = '';
         $this->room_number = '';
         $this->is_available = true;
         $this->price = '';

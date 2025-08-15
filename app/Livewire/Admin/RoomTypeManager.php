@@ -11,6 +11,7 @@ class RoomTypeManager extends Component
     public $name;
     public $description;
     public $base_price;
+    public $service;
     public $editingRoomTypeId = null;
     public $showCreateModal = false;
     public $showEditModal = false;
@@ -19,6 +20,7 @@ class RoomTypeManager extends Component
         'name' => 'string|max:255',
         'description' => 'nullable|string',
         'base_price' => 'required|numeric|min:0',
+        'service' => 'nullable|string',
     ];
 
     public function mount()
@@ -54,6 +56,7 @@ class RoomTypeManager extends Component
                 'name' => $this->name,
                 'description' => $this->description,
                 'base_price' => $this->base_price,
+                'service' => $this->service,
             ]);
 
             $this->loadRoomTypes();
@@ -72,6 +75,7 @@ class RoomTypeManager extends Component
         $this->name = $roomType->name;
         $this->description = $roomType->description;
         $this->base_price = $roomType->base_price;
+        $this->service = $roomType->service;
         $this->showEditModal = true;
 
         // Update unique rule for editing
@@ -88,6 +92,7 @@ class RoomTypeManager extends Component
                 'name' => $this->name,
                 'description' => $this->description,
                 'base_price' => $this->base_price,
+                'service' => $this->service,
             ]);
 
             $this->loadRoomTypes();
@@ -122,6 +127,7 @@ class RoomTypeManager extends Component
         $this->name = '';
         $this->description = '';
         $this->base_price = '';
+        $this->service = '';
         $this->editingRoomTypeId = null;
         $this->rules['name'] = 'required|string|max:255|unique:room_types,name';
     }

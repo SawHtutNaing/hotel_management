@@ -54,6 +54,26 @@
             </div>
         </div>
 
+        <!-- About Us Section -->
+        <div class="bg-gray-50 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">About Us</h2>
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 p-4">
+                        <img src="{{ asset('storage/images/about-us.jpg') }}" alt="About Us" class="rounded-lg shadow-md">
+                    </div>
+                    <div class="md:w-1/2 p-4">
+                        <p class="text-gray-700 text-lg">
+                            LuxeStay Hotel is dedicated to providing an exceptional guest experience. Our mission is to offer a perfect blend of comfort, luxury, and convenience. From our elegantly designed rooms to our top-notch amenities, every detail is crafted to ensure your stay is memorable.
+                        </p>
+                        <p class="text-gray-700 text-lg mt-4">
+                            Located in the heart of the city, LuxeStay offers easy access to major attractions and business centers. Whether you're here for leisure or business, our professional staff is committed to making your stay seamless and enjoyable.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <footer class="bg-gray-800 text-white py-6">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

@@ -28,8 +28,8 @@
                     <x-nav-link :href="route('booking.history')" :active="request()->routeIs('booking.history')">
     {{ __('Booking History') }}
 </x-nav-link>
-                        <x-nav-link :href="route('breakfast.order')" :active="request()->routeIs('breakfast.order')">
-    {{ __('Breakfast Order') }}
+                        <x-nav-link :href="route('food.order')" :active="request()->routeIs('food.order')">
+    {{ __('Food Order') }}
 
 </x-nav-link>
 @endif
@@ -41,6 +41,12 @@
                        <x-nav-link :href="route('admin.meals')" :active="request()->routeIs('admin.meals')">
                             {{ __('Meals') }}
                             {{-- {{ __('Admin Dashboard') }} --}}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.food-categories')" :active="request()->routeIs('admin.food-categories')">
+                            {{ __('Food Categories') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.floor-types')" :active="request()->routeIs('admin.floor-types')">
+                            {{ __('Floor Types') }}
                         </x-nav-link>
           <x-nav-link :href="route('admin.bookings')" :active="request()->routeIs('admin.bookings')">
                             {{ __('Room Bookings') }}
