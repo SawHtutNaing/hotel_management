@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'is_admin' => false,
         ]);
 
-        User::factory(10)->create();
+        // User::factory(10)->create();
 
         // Create room types
         $single = RoomType::create(['name' => 'Single', 'base_price' => 80, 'service' => 'Daily housekeeping']);

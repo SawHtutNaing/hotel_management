@@ -20,9 +20,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($orders as $order)
+                        @foreach($orders as $no =>  $order)
                             <tr>
-                                <td class="px-6 py-4 text-gray-900">{{ $order->id }}</td>
+                                <td class="px-6 py-4 text-gray-900">{{ $no + 1 }}</td>
                                 <td class="px-6 py-4 text-gray-900">{{ $order->room->room_number }} ({{ $order->room->roomType->name }})</td>
                                 <td class="px-6 py-4 text-gray-900">{{ $order->meal->name }}</td>
                                 <td class="px-6 py-4">

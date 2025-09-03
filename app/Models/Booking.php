@@ -18,23 +18,14 @@ class Booking extends Model
         return $this->belongsTo(Room::class);
     }
 
-     public static function updateRoomAvailability()
-    {
+ public static function updateRoomAvailability()
+{
+    $today = Carbon::today();
+    Room::whereHas('bookings', function ($query) use ($today) {
+        $query->where('status', 'confirmed')
+              ->whereDate('check_out', '<=', $today);
+    })->update(['is_available' => true]);
+}
 
-        $rooms = Room::with(['bookings' => function ($query) {
-            $query->where('status', 'confirmed')
-                  ->orderBy('check_out', 'desc')
-                  ->first();
-        }])->get();
 
-        $today = Carbon::today();
-
-        foreach ($rooms as $room) {
-            $latestBooking = $room->bookings->first();
-
-            if ($latestBooking && $today->isSameDay(Carbon::parse($latestBooking->check_out))) {
-                $room->update(['is_available' => true]);
-            }
-        }
-    }
 }

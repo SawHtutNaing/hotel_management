@@ -38,6 +38,8 @@
                     <h2 class="text-xl font-semibold text-gray-900">{{ $room->roomType->name }}</h2>
                     <p class="text-gray-700">Room Number: {{ $room->room_number }}</p>
                     <p class="text-gray-700">Price: ${{ $room->price }}/night</p>
+                    <p class="text-gray-700">Service: {{ $room->roomType->service }}</p>
+                    <p class="text-gray-700">Floor Type{{ $room->floorType->name }}</p>
 
                    @if (Auth::check() && (!Auth::user()->is_admin))
                     <a href="{{ route('booking.form', $room->id) }}" class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">Book Now</a>
