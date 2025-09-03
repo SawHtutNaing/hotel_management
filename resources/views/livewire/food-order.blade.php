@@ -32,7 +32,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Meal</label>
-                    <select wire:model="meal_id" class="mt-1 block w-full rounded-md border-gray-300">
+                    <select wire:model.live="meal_id" class="mt-1 block w-full rounded-md border-gray-300">
                         <option value="">Select Meal</option>
                         @foreach($meals as $meal)
                             <option value="{{ $meal->id }}">{{ $meal->name }} (${{ $meal->price }})</option>
@@ -42,12 +42,15 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Quantity</label>
-                    <input type="number" wire:model="quantity" min="1" class="mt-1 block w-full rounded-md border-gray-300">
+                    <input type="number" wire:model.live="quantity" min="1" class="mt-1 block w-full rounded-md border-gray-300">
                     @error('quantity') <span class="text-red-600">{{ $message }}</span> @enderror
                 </div>
                 <div>
+
                     <label class="block text-sm font-medium text-gray-700">Total Amount</label>
-                    <input type="text" wire:model="total_amount" readonly class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100">
+                    <span type="text" wire:model.live="total_amount"  class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100">
+                        {{ $total_amount }}
+                    </span>
                 </div>
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">Place Order</button>
             </form>

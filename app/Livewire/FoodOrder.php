@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class FoodOrder extends Component
 {
@@ -21,19 +22,26 @@ public $food_category_id; // new property for selected category
         'quantity' => 'required|integer|min:1',
     ];
 
-    public function updated($propertyName)
-    {
-        if ($propertyName === 'meal_id' || $propertyName === 'quantity') {
-            $this->calculateTotal();
-        }
+
+public function updated($propertyName)
+{
+
+
+    if ($propertyName === 'meal_id' || $propertyName === 'quantity') {
+
+        $this->calculateTotal();
     }
+}
+
 
     public function calculateTotal()
     {
+
         if ($this->meal_id && $this->quantity) {
             $meal = Meal::find($this->meal_id);
             if ($meal) {
                 $this->total_amount = $meal->price * $this->quantity;
+
             }
         }
     }

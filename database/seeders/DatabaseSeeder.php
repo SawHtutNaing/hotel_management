@@ -129,7 +129,7 @@ class DatabaseSeeder extends Seeder
             'meal_id' => $meal1->id,
             'quantity' => 2,
             'total_amount' => $meal1->price * 2,
-            'status' => 'pending',
+            'status' => 'confirmed',
         ]);
 
         Order::create([

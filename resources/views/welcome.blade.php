@@ -60,7 +60,10 @@
                 <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">About Us</h2>
                 <div class="flex flex-col md:flex-row items-center">
                     <div class="md:w-1/2 p-4">
-                        <img src="{{ asset('storage/images/about-us.jpg') }}" alt="About Us" class="rounded-lg shadow-md">
+
+                        <img
+
+                        src="{{ asset('storage/images/hotel-bg.jpg') }}" alt="About Us" class="rounded-lg shadow-md">
                     </div>
                     <div class="md:w-1/2 p-4">
                         <p class="text-gray-700 text-lg">
