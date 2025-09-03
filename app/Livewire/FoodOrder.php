@@ -56,7 +56,7 @@ public function updated($propertyName)
             'meal_id' => $this->meal_id,
             'quantity' => $this->quantity,
             'total_amount' => $this->total_amount,
-            'status' => 'confirmed',
+            'status' => 'pending',
         ]);
 
         $this->reset(['room_id', 'meal_id', 'quantity', 'total_amount']);
